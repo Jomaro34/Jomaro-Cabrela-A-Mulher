@@ -1,43 +1,325 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minha Galeria</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galeria de Arte - Jomaro Cabrela</title>
   <style>
+    :root {
+      --logo-base: 200px; /* tamanho base do logo */
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f7f7f7;
       margin: 0;
-      padding: 20px;
+      background-color: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-bottom: 0;
+      padding-top: 0;
     }
-    h1 {
-      color: #333;
-    }
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-      max-width: 800px;
-      margin: 20px auto;
-    }
-    .galeria img {
+
+    /* Cabeçalho fixo */
+    header {
+      text-align: center;
+      padding: 12px 16px;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: #000;
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
     }
+    header a { display: inline-block; }
+    /* Logo aumentado 180% */
+    header img {
+      width: calc(var(--logo-base) * 1.8);
+      max-width: 95%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    /* Título reduzido para 70% */
+    header h1 {
+      margin: 0;
+      font-size: 16.8px;
+      line-height: 1;
+      font-weight: normal;
+      letter-spacing: 0.2px;
+    }
+
+    /* Galeria estilo masonry */
+    .gallery {
+      flex: 1;
+      column-width: 200px;   /* miniaturas ~50% menores (meio termo) */
+      column-gap: 12px;
+      padding: 12px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .gallery > a,
+    .gallery > img {
+      break-inside: avoid;
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 12px;
+      vertical-align: top;
+    }
+    .gallery img {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+      border: 1px solid #fff;
+      transition: transform 0.2s ease;
+      background: #111;
+    }
+    .gallery img:hover { transform: scale(1.03); }
+
+    footer {
+      text-align: center;
+      padding: 14px 12px;
+      background: #111;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 900;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .author-photo {
+      width: 64px;
+      height: auto;
+      display: block;
+      margin: 0 auto 10px;
+      border-radius: 0;
+    }
+
+    .socials {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .socials a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+    }
+    .socials img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+      display: block;
+    }
+
+    footer .copyright {
+      color: white;
+      text-decoration: none;
+    }
+    footer .copyright:hover {
+      text-decoration: underline;
+    }
+
+    footer a[href^="mailto:"] {
+      color: #fff;
+      font-size: 0.85em;
+      text-decoration: none;
+    }
+    footer a[href^="mailto:"]:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.95);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal.open { display: flex; }
+    .modal img {
+      max-width: 92vw;
+      max-height: 90vh;
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+    .close {
+  position: absolute;
+  top: 16px;
+  right: 24px;
+  font-size: 40px;       /* ligeiramente maior */
+  color: #fff;           /* cruz branca */
+  background: transparent; /* sem fundo */
+  border: none;            /* sem borda */
+  outline: none;           /* remove a cercadura azul/cinza do foco */
+  cursor: pointer;
+  user-select: none;
+  line-height: 1;
+  padding: 0;
+}
+
+.close:hover {
+  color: #ff4444;        /* opcional: fica vermelha no hover */
+}
   </style>
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <script src="https://cdn.counter.dev/script.js"
+          data-id="e7a29e89-effa-49c1-8723-d4f954930e9a"
+          data-utcoffset="1" defer></script>
 </head>
 <body>
-  <h1>Minha Galeria de Teste</h1>
-  <p>Bem-vindo! Aqui estão algumas imagens de exemplo.</p>
 
-  <div class="galeria">
-    <img src="https://placekitten.com/300/200" alt="Gatinho 1">
-    <img src="https://placekitten.com/301/200" alt="Gatinho 2">
-    <img src="https://placekitten.com/302/200" alt="Gatinho 3">
+  <header id="siteHeader">
+    <a href="https://sites.google.com/site/jcarteart/" target="_blank" rel="noopener">
+      <img id="logoImg" src="JomaroCabrela_nome.webp" alt="Jomaro Cabrela - Página Principal" width="300" height="120">
+    </a>
+    <h1 id="siteTitle">Galeria - A Mulher</h1>
+  </header>
+
+  <main>
+    <div class="gallery" id="gallery">
+      <!-- as tuas imagens aqui -->
+
+<img src="Quadros/367.webp" alt="Quadro 367" width="600" height="800" loading="lazy">
+<img src="Quadros/523.webp" alt="Quadro 523" width="600" height="800" loading="lazy">
+<img src="Quadros/524.webp" alt="Quadro 524" width="600" height="800" loading="lazy">
+<img src="Quadros/525.webp" alt="Quadro 525" width="600" height="800" loading="lazy">
+<img src="Quadros/526.webp" alt="Quadro 526" width="600" height="800" loading="lazy">
+<img src="Quadros/527.webp" alt="Quadro 527" width="600" height="800" loading="lazy">
+<img src="Quadros/528.webp" alt="Quadro 528" width="600" height="800" loading="lazy">
+<img src="Quadros/529.webp" alt="Quadro 529" width="600" height="800" loading="lazy">
+<img src="Quadros/530.webp" alt="Quadro 530" width="600" height="800" loading="lazy">
+<img src="Quadros/531.webp" alt="Quadro 531" width="600" height="800" loading="lazy">
+<img src="Quadros/532.webp" alt="Quadro 532" width="600" height="800" loading="lazy">
+<img src="Quadros/533.webp" alt="Quadro 533" width="600" height="800" loading="lazy">
+<img src="Quadros/534.webp" alt="Quadro 534" width="600" height="800" loading="lazy">
+<img src="Quadros/537.webp" alt="Quadro 537" width="600" height="800" loading="lazy">
+<img src="Quadros/538.webp" alt="Quadro 538" width="600" height="800" loading="lazy">
+<img src="Quadros/539.webp" alt="Quadro 539" width="600" height="800" loading="lazy">
+<img src="Quadros/557.webp" alt="Quadro 557" width="600" height="800" loading="lazy">
+<img src="Quadros/558.webp" alt="Quadro 558" width="600" height="800" loading="lazy">
+<img src="Quadros/560.webp" alt="Quadro 560" width="600" height="800" loading="lazy">
+<img src="Quadros/561.webp" alt="Quadro 561" width="600" height="800" loading="lazy">
+<img src="Quadros/562.webp" alt="Quadro 562" width="600" height="800" loading="lazy">
+<img src="Quadros/563.webp" alt="Quadro 563" width="600" height="800" loading="lazy">
+<img src="Quadros/568.webp" alt="Quadro 568" width="600" height="800" loading="lazy">
+<img src="Quadros/70.webp" alt="Quadro 70" width="600" height="800" loading="lazy">
+<img src="Quadros/144.webp" alt="Quadro 174" width="600" height="800" loading="lazy">
+<img src="Quadros/273.webp" alt="Quadro 273" width="600" height="800" loading="lazy">
+<img src="Quadros/368.webp" alt="Quadro 368" width="600" height="800" loading="lazy">
+<img src="Quadros/376.webp" alt="Quadro 376" width="600" height="800" loading="lazy">
+<img src="Quadros/384.webp" alt="Quadro 384" width="600" height="800" loading="lazy">
+<img src="Quadros/435.webp" alt="Quadro 435" width="600" height="800" loading="lazy">
+<img src="Quadros/513.webp" alt="Quadro 513" width="600" height="800" loading="lazy">
+
+      <!-- ... resto das imagens ... -->
+    </div>
+  </main>
+
+  <footer id="siteFooter">
+    <p>
+      <a href="https://jomaro34.github.io/Jomaro-Cabrela-Autobiografia/">
+        <img class="author-photo" src="JomaroCabrela_Foto.webp" alt="Foto de Jomaro Cabrela" width="80" height="110">
+      </a>
+    </p>
+    <p>
+      <a class="copyright" href="https://jomaro34.github.io/Jomaro-Cabrela/">&copy; Jomaro Cabrela</a><br>
+      <a href="mailto:jomarocabrela@gmail.com">jomarocabrela@gmail.com</a>
+    </p>
+
+    <div class="socials">
+      <a href="https://www.facebook.com/jomaro.cabrela/"><img src="FaceBook.webp" alt="Facebook pessoal"></a>
+      <a href="https://www.facebook.com/jomarocabrelaarte/"><img src="FaceBook.webp" alt="Facebook Arte"></a>
+      <a href="https://www.instagram.com/jomarocabrela/"><img src="Instagram.webp" alt="Instagram"></a>
+      <a href="https://pt.pinterest.com/jcabrela/"><img src="Pinterest.webp" alt="Pinterest"></a>
+      <a href="https://x.com/JCabrela"><img src="X.webp" alt="X (Twitter)"></a>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="myModal" class="modal" aria-hidden="true" role="dialog" aria-label="Visualizador de imagem">
+    <button class="close" aria-label="Fechar">&times;</button>
+    <img id="modalImg" alt="">
   </div>
+
+  <script>
+    function updateBodySpacing() {
+      const header = document.getElementById('siteHeader');
+      const footer = document.getElementById('siteFooter');
+      const extra = 12;
+      if (header) document.body.style.paddingTop = (header.offsetHeight + extra) + 'px';
+      if (footer) document.body.style.paddingBottom = (footer.offsetHeight + extra) + 'px';
+    }
+
+    function initGallery() {
+      const gallery = document.getElementById('gallery');
+      if (!gallery) return;
+      const items = Array.from(gallery.children);
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      gallery.innerHTML = "";
+      items.forEach(n => gallery.appendChild(n));
+
+      const modal = document.getElementById('myModal');
+      const modalImg = document.getElementById('modalImg');
+      const closeBtn = modal.querySelector('.close');
+
+      function openModal(src, alt) {
+        modalImg.src = src;
+        modalImg.alt = alt || '';
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        closeBtn.focus();
+      }
+      function closeModal() {
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        modalImg.removeAttribute('src');
+        modalImg.alt = '';
+      }
+
+      gallery.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+          if (img.closest('a')) return;
+          openModal(img.src, img.alt);
+        });
+      });
+
+      closeBtn.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initGallery();
+      updateBodySpacing();
+    });
+
+    window.addEventListener('resize', function() {
+      clearTimeout(window._updSpacingTimer);
+      window._updSpacingTimer = setTimeout(updateBodySpacing, 120);
+    });
+  </script>
 
 </body>
 </html>
